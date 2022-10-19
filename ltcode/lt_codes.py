@@ -5,9 +5,9 @@ import os
 import math
 import argparse
 import numpy as np
-import core
-from encoder import encode
-from decoder import decode
+from . import core
+from .encoder import encode
+from .decoder import decode
 
 def blocks_read(file, filesize):
     """ Read the given file by blocks of `core.PACKET_SIZE` and use np.frombuffer() improvement.
@@ -57,7 +57,7 @@ def blocks_write(blocks, file, filesize):
     file_copy.write(shrinked_data)
 
 #########################################################
-    
+
 if __name__ == "__main__":
     
     parser = argparse.ArgumentParser(description="Robust implementation of LT Codes encoding/decoding process.")

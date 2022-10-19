@@ -1,4 +1,5 @@
-from core import *
+from .core import *
+from .basic import LOG
 
 def recover_graph(symbols, blocks_quantity):
     """ Get back the same random indexes (or neighbors), thanks to the symbol id as seed.
@@ -8,6 +9,7 @@ def recover_graph(symbols, blocks_quantity):
     for symbol in symbols:
         
         neighbors, deg = generate_indexes(symbol.index, symbol.degree, blocks_quantity)
+        # neighbors: [与这个symbow相关的block]
         symbol.neighbors = {x for x in neighbors}
         symbol.degree = deg
 
@@ -62,11 +64,17 @@ def decode(symbols, blocks_quantity):
     blocks = [None] * blocks_n
 
     # Recover the degrees and associated neighbors using the seed (the index, cf. encoding).
+    # 使用seed恢复所有block的index
     symbols = recover_graph(symbols, blocks_n)
-    print("Graph built back. Ready for decoding.", flush=True)
-    
+
+    LOG.Basic("DECODE", "Graph built back. Ready for decoding.")
+
+
     solved_blocks_count = 0
+
+    # 已经解析出来的数据
     iteration_solved_count = 0
+
     start_time = time.time()
     
     while iteration_solved_count > 0 or solved_blocks_count == 0:
@@ -74,10 +82,12 @@ def decode(symbols, blocks_quantity):
         iteration_solved_count = 0
 
         # Search for solvable symbols
+        # 高斯消元法解01方程组
         for i, symbol in enumerate(symbols):
 
             # Check the current degree. If it's 1 then we can recover data
-            if symbol.degree == 1: 
+            # seed
+            if symbol.degree == 1:
 
                 iteration_solved_count += 1 
                 block_index = next(iter(symbol.neighbors)) 
@@ -90,7 +100,7 @@ def decode(symbols, blocks_quantity):
                 blocks[block_index] = symbol.data
 
                 if VERBOSE:
-                    print("Solved block_{} with symbol_{}".format(block_index, symbol.index))
+                    LOG.Basic("DECODE", "Solved block_{} with symbol_{}".format(block_index, symbol.index))
               
                 # Update the count and log the processing
                 solved_blocks_count += 1
@@ -99,6 +109,6 @@ def decode(symbols, blocks_quantity):
                 # Reduce the degrees of other symbols that contains the solved block as neighbor             
                 reduce_neighbors(block_index, blocks, symbols)
 
-    print("\n----- Solved Blocks {:2}/{:2} --".format(solved_blocks_count, blocks_n))
+    LOG.Basic("DECODE", "----- Solved Blocks {:2}/{:2} --".format(solved_blocks_count, blocks_n))
 
     return np.asarray(blocks), solved_blocks_count

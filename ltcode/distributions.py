@@ -1,4 +1,4 @@
-from core import *
+from .core import *
 
 def ideal_distribution(N):
     """ Create the ideal soliton distribution. 
