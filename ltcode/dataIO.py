@@ -34,5 +34,3 @@ def decode_from_symbols(symbols, blocks_quantity):
     recoveredBlocks, recoverdN = decode(symbols, blocks_quantity=blocks_quantity)
     LOG.Basic("DECODE", "End Decode")
     return recoveredBlocks, recoverdN
-
-

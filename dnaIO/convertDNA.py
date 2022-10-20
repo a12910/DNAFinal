@@ -57,21 +57,23 @@ class DNAConverter:
 
 def convert_dnaArr_from_bitArr(arr: [bytearray]) -> [DNAStr]:
     result = []
-    LOG.Basic("DNA-ENCODE", "Convert Bytes -> DNA Start")
+    LOG.Basic("DNA-ENCODE", "Convert Bytes->DNA Start")
+    dnaCount = 0
     conv = DNAConverter()
     for bits in arr:
         dna = conv.byteArray_to_DNA(bits)
         result.append(dna)
-    LOG.Basic("DNA-ENCODE", "Convert Bytes -> DNA Finish")
+        dnaCount += len(dna.data)
+    LOG.Basic("DNA-ENCODE", "Convert Bytes->DNA Finish Count: %d/%d" % (dnaCount, len(arr)))
     return result
 
 
 def convert_bitArr_from_DNAs(DNAs: [DNAStr]) -> [bytearray]:
     result = []
-    LOG.Basic("DNA-DECODE", "Convert DNA -> Bytes Start")
+    LOG.Basic("DNA-DECODE", "Convert DNA->Bytes Start")
     conv = DNAConverter()
     for dna in DNAs:
         bits = conv.DNA_to_byteArray(dna)
         result.append(bits)
-    LOG.Basic("DNA-DECODE", "Convert DNA -> Bytes Finish")
+    LOG.Basic("DNA-DECODE", "Convert DNA->Bytes Finish")
     return result

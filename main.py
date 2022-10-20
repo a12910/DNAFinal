@@ -11,7 +11,7 @@ if __name__ == "__main__":
     LOG.Basic("INIT", "File Hash: %s" % hashInit)
 
     # 载入并切分文件
-    fileBlocks, fileBlocksN, dropQuantity, fileSize = lt.load_files(fileName, 512)
+    fileBlocks, fileBlocksN, dropQuantity, fileSize = lt.load_files(fileName, 32)
 
     # 生成喷泉码
     fileSymbols = lt.create_symbols(fileBlocks, dropQuantity)
@@ -40,3 +40,4 @@ if __name__ == "__main__":
 
     hashOut = dna.compute_file_hash(outFile)
     LOG.Basic("FINISH", "OutFile Hash: %s" % hashOut)
+    LOG.Basic("FINISH", "File Convert %s" % ("Success" if hashOut == hashInit else "Failed"))
