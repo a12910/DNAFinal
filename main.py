@@ -22,8 +22,11 @@ if __name__ == "__main__":
     # 生成DNAArr
     dnaArr = dna.convert_dnaArr_from_bitArr(bitsArr)
 
+    # 进行模拟损毁
+    dnaArrOut = dna.destory_DNAs(dnaArr, 0.05, 10)
+
     # 使用DNA进行恢复为比特流
-    bitsArrOut = dna.convert_bitArr_from_DNAs(dnaArr)
+    bitsArrOut = dna.convert_bitArr_from_DNAs(dnaArrOut)
 
     # 从比特流恢复到喷泉码
     symbolsOut, fileSizeOut, fileBlocksNOut = dna.convert_symbols_from_bitArray(bitsArrOut)
