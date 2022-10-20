@@ -67,7 +67,7 @@ def decode(symbols, blocks_quantity):
     # 使用seed恢复所有block的index
     symbols = recover_graph(symbols, blocks_n)
 
-    LOG.Basic("DECODE", "Graph built back. Ready for decoding.")
+    LOG.Basic("LT-DECODE", "Graph built back. Ready for decoding.")
 
 
     solved_blocks_count = 0
@@ -100,15 +100,15 @@ def decode(symbols, blocks_quantity):
                 blocks[block_index] = symbol.data
 
                 if VERBOSE:
-                    LOG.Basic("DECODE", "Solved block_{} with symbol_{}".format(block_index, symbol.index))
+                    LOG.Basic("LT-DECODE", "Solved block_{} with symbol_{}".format(block_index, symbol.index))
               
                 # Update the count and log the processing
                 solved_blocks_count += 1
-                log("Decoding", solved_blocks_count, blocks_n, start_time)
+                # log("Decoding", solved_blocks_count, blocks_n, start_time)
 
                 # Reduce the degrees of other symbols that contains the solved block as neighbor             
                 reduce_neighbors(block_index, blocks, symbols)
 
-    LOG.Basic("DECODE", "----- Solved Blocks {:2}/{:2} --".format(solved_blocks_count, blocks_n))
+    LOG.Basic("LT-DECODE", "----- Solved Blocks {:2}/{:2} --".format(solved_blocks_count, blocks_n))
 
     return np.asarray(blocks), solved_blocks_count

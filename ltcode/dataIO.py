@@ -1,11 +1,12 @@
 import os
-from . import PACKET_SIZE, blocks_read, encode
+from . import blocks_read, encode, decode, core
 from . import LOG
+
 
 def load_files(fileName, blockSize):
     file = open(fileName, 'rb')
 
-    PACKET_SIZE = blockSize
+    core.PACKET_SIZE = blockSize
     fileSize = os.path.getsize(fileName)
 
     LOG.Basic("INIT", "Filesize: {} bytes".format(fileSize))
@@ -13,10 +14,11 @@ def load_files(fileName, blockSize):
     fileBlocksN = len(fileBlocks)
     dropQuantity = fileBlocksN * 2
 
-    LOG.Basic("INIT", "Blocks: {} -> {} * {} bytes".format(fileBlocksN, dropQuantity, PACKET_SIZE))
+    LOG.Basic("INIT", "Blocks: {} -> {} * {} bytes".format(fileBlocksN, dropQuantity, core.PACKET_SIZE))
 
     file.close()
-    return fileBlocks, fileBlocksN, dropQuantity
+    return fileBlocks, fileBlocksN, dropQuantity, fileSize
+
 
 def create_symbols(fileBlocks, dropQuantity):
     LOG.Basic("ENCODE", "Start Encode")
@@ -25,3 +27,12 @@ def create_symbols(fileBlocks, dropQuantity):
         fileSymbols.append(symbol)
     LOG.Basic("ENCODE", "End Encode")
     return fileSymbols
+
+
+def decode_from_symbols(symbols, blocks_quantity):
+    LOG.Basic("DECODE", "Start Decode")
+    recoveredBlocks, recoverdN = decode(symbols, blocks_quantity=blocks_quantity)
+    LOG.Basic("DECODE", "End Decode")
+    return recoveredBlocks, recoverdN
+
+

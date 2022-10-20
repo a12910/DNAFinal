@@ -47,14 +47,14 @@ def blocks_write(blocks, file, filesize):
     """
 
     count = 0
-    for data in recovered_blocks[:-1]:
-        file_copy.write(data)
+    for data in blocks[:-1]:
+        file.write(data)
         count += len(data)
 
     # Convert back the bytearray to bytes and shrink back 
-    last_bytes = bytes(recovered_blocks[-1])
-    shrinked_data = last_bytes[:filesize % core.PACKET_SIZE]
-    file_copy.write(shrinked_data)
+    last_bytes = bytes(blocks[-1])
+    shrinked_data = last_bytes[: filesize % core.PACKET_SIZE]
+    file.write(shrinked_data)
 
 #########################################################
 

@@ -4,6 +4,7 @@ import math
 import time
 import numpy as np
 import random
+from .basic import LOG
 from random import choices
 
 SYSTEMATIC = False
@@ -35,7 +36,7 @@ class Symbol:
 
     def log(self, blocks_quantity):
         neighbors, _ = generate_indexes(self.index, self.degree, blocks_quantity)
-        print("symbol_{} degree={}\t {}".format(self.index, self.degree, neighbors))
+        LOG.Basic("SYMBOL", "symbol_{} degree={}\t {}".format(self.index, self.degree, neighbors))
 
 def generate_indexes(symbol_index, degree, blocks_quantity):
     """Randomly get `degree` indexes, given the symbol index as a seed
