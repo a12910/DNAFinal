@@ -4,14 +4,18 @@ from ltcode import LOG
 import dnaIO as dna
 
 if __name__ == "__main__":
-    fileName = "data/hat-768x512.png"
-    outFile = "data/hat-768x512-out.png"
+    # fileName = "data/hat-768x512.png"
+    # outFile = "data/hat-768x512-out.png"
+    fileName = "data/txt_data.txt"
+    outFile = "data/txt_data-out.txt"
+
+    LOG.Basic("INIT", "File Name; %s" % fileName)
 
     hashInit = dna.compute_file_hash(fileName)
     LOG.Basic("INIT", "File Hash: %s" % hashInit)
 
     # 载入并切分文件
-    fileBlocks, fileBlocksN, dropQuantity, fileSize = lt.load_files(fileName, 32)
+    fileBlocks, fileBlocksN, dropQuantity, fileSize = lt.load_files(fileName, 32, 2)
 
     # 生成喷泉码
     fileSymbols = lt.create_symbols(fileBlocks, dropQuantity)

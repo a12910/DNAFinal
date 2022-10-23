@@ -1,5 +1,6 @@
 from .distributions import *
 from .basic import LOG
+import random
 
 def get_degrees_from(distribution_name, N, k):
     """ Returns the random degrees from a given distribution of probabilities.
@@ -13,9 +14,10 @@ def get_degrees_from(distribution_name, N, k):
         probabilities = robust_distribution(N)
     else:
         probabilities = None
-    
+
+    random.seed(N)
     population = list(range(0, N+1))
-    return [1] + choices(population, probabilities, k=k-1)
+    return [1] + random.choices(population, probabilities, k=k-1)
    
 def encode(blocks, drops_quantity):
     """ Iterative encoding - Encodes new symbols and yield them.
@@ -41,7 +43,8 @@ def encode(blocks, drops_quantity):
     # Generate random indexes associated to random degrees, seeded with the symbol id
     # [1] + 以robust概率分布选择1到n中k个可重复元素
     # [1, 2, 2, 4, 1, ...]
-    random_degrees = get_degrees_from("robust", blocks_n, k=drops_quantity)
+
+    random_degrees = get_degrees_from("robust", blocks_n, k=blocks_n * 2)
     LOG.Basic("LT-ENCODE", "Ready for encoding.")
 
     for i in range(drops_quantity):
@@ -52,7 +55,7 @@ def encode(blocks, drops_quantity):
         # n:block总数
         # selection: 在k个blocks中选择一些元素
         # deg: seed值: 使用seed初始化random 然后random.sample进行抽样
-        selection_indexes, deg = generate_indexes(i, random_degrees[i], blocks_n)
+        selection_indexes, deg = generate_indexes(i, random_degrees[i % (blocks_n * 2)], blocks_n)
 
         # Xor each selected array within each other gives the drop (or just take one block if there is only one selected)
         drop = blocks[selection_indexes[0]]

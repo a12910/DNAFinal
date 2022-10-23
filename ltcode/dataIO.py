@@ -3,7 +3,7 @@ from . import blocks_read, encode, decode, core
 from . import LOG
 
 
-def load_files(fileName, blockSize):
+def load_files(fileName, blockSize, quantityRatio):
     file = open(fileName, 'rb')
 
     core.PACKET_SIZE = blockSize
@@ -12,7 +12,7 @@ def load_files(fileName, blockSize):
     LOG.Basic("INIT", "Filesize: {} bytes".format(fileSize))
     fileBlocks = blocks_read(file, fileSize)
     fileBlocksN = len(fileBlocks)
-    dropQuantity = fileBlocksN * 2
+    dropQuantity = fileBlocksN * quantityRatio
 
     LOG.Basic("INIT", "Blocks: {} -> {} * {} bytes".format(fileBlocksN, dropQuantity, core.PACKET_SIZE))
 

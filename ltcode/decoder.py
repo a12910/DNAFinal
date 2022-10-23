@@ -1,20 +1,19 @@
 from .core import *
 from .basic import LOG
+from .encoder import *
 
 def recover_graph(symbols, blocks_quantity):
     """ Get back the same random indexes (or neighbors), thanks to the symbol id as seed.
     For an easy implementation purpose, we register the indexes as property of the Symbols objects.
     """
 
+    degrees = get_degrees_from("robust", blocks_quantity, blocks_quantity * 2)
     for symbol in symbols:
-        
-        neighbors, deg = generate_indexes(symbol.index, symbol.degree, blocks_quantity)
+        degree = degrees[symbol.index % (blocks_quantity * 2)]
+        neighbors, deg = generate_indexes(symbol.index, degree, blocks_quantity)
         # neighbors: [与这个symbow相关的block]
         symbol.neighbors = {x for x in neighbors}
         symbol.degree = deg
-
-        if VERBOSE:
-            symbol.log(blocks_quantity)
 
     return symbols
 
@@ -109,6 +108,6 @@ def decode(symbols, blocks_quantity):
                 # Reduce the degrees of other symbols that contains the solved block as neighbor             
                 reduce_neighbors(block_index, blocks, symbols)
 
-    LOG.Basic("LT-DECODE", "----- Solved Blocks {:2}/{:2} --".format(solved_blocks_count, blocks_n))
+    LOG.Basic("LT-DECODE", "Solved Blocks {:2}/{:2}".format(solved_blocks_count, blocks_n))
 
     return np.asarray(blocks), solved_blocks_count

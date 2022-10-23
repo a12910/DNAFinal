@@ -52,7 +52,7 @@ def generate_indexes(symbol_index, degree, blocks_quantity):
 
     To be sure to get the same random indexes, we need to pass 
     """
-    if SYSTEMATIC and symbol_index < blocks_quantity:
+    if symbol_index < blocks_quantity:
         indexes = [symbol_index]               
         degree = 1     
     else:

@@ -10,7 +10,7 @@ class AssembleConverter:
 
     def symbol_to_bytes(self, symbol: Symbol) -> bytearray:
         # hash/32 degree/32 index/32 data/:
-        degreeBit32 = self.int_to_bit32(symbol.degree)
+        # degreeBit32 = self.int_to_bit32(symbol.degree)
         indexBit32 = self.int_to_bit32(symbol.index)
         dataBits = bytearray(bytes(symbol.data))
 
@@ -21,12 +21,12 @@ class AssembleConverter:
             countValue = self.blockN % (2 ** 32)
             countBit32 = self.int_to_bit32(countValue)
 
-            hashTest = degreeBit32 + indexBit32 + sizeBit32 + countBit32 + dataBits
+            hashTest = indexBit32 + sizeBit32 + countBit32 + dataBits
             hashValue = self.get_byteHash(hashTest)
             hashBit32 = self.int_to_bit32(hashValue)
             return hashBit32 + hashTest
         else:
-            hashTest = degreeBit32 + indexBit32 + dataBits
+            hashTest = indexBit32 + dataBits
             hashValue = self.get_byteHash(hashTest)
             hashBit32 = self.int_to_bit32(hashValue)
             return hashBit32 + hashTest
@@ -43,26 +43,26 @@ class AssembleConverter:
         if hastResult != hashValue:
             return None
 
-        degreeBit32 = arr[4:8]
-        indexBit32 = arr[8:12]
-        degree = self.bit32_to_int(degreeBit32)
+        # degreeBit32 = arr[4:8]
+        indexBit32 = arr[4:8]
+        # degree = self.bit32_to_int(degreeBit32)
         index = self.bit32_to_int(indexBit32)
         if index == 0:
-            fileBit32 = arr[12:16]
+            fileBit32 = arr[8:12]
             self.fileSize = self.bit32_to_int(fileBit32)
-            countBit32 = arr[16:20]
+            countBit32 = arr[12:16]
             self.blockN = self.bit32_to_int(countBit32)
-            dataBits = arr[20:]
+            dataBits = arr[16:]
             dataSymbol = np.frombuffer(dataBits, dtype=Symbol.NUMPY_TYPE)
             sym = Symbol(index=index,
-                         degree=degree,
+                         degree=0,
                          data=dataSymbol)
             return sym
         else:
-            dataBits = arr[12:]
+            dataBits = arr[8:]
             dataSymbol = np.frombuffer(dataBits, dtype=Symbol.NUMPY_TYPE)
             sym = Symbol(index=index,
-                         degree=degree,
+                         degree=0,
                          data=dataSymbol)
             return sym
 
@@ -99,25 +99,25 @@ class AssembleConverter:
 
 
 def convert_bytes_form_symbols(symbols, fileSize, blocksN) -> [bytearray]:
-    LOG.Basic("ASSEM-ENCODE", "Convert Symbol -> Bytes Start")
+    LOG.Basic("ASSEM-ENCODE", "Convert Symbol->Bytes Start")
     conv = AssembleConverter(fileSize, blocksN)
     result = []
     for sym in symbols:
         bits = conv.symbol_to_bytes(sym)
         result.append(bits)
-    LOG.Basic("ASSEM", "Convert Symbol -> Bytes Finish")
+    LOG.Basic("ASSEM-ENCODE", "Convert Symbol->Bytes Finish")
     return result
 
 
 def convert_symbols_from_bitArray(arr: [bytearray]) -> ([Symbol], int, int):
     result = []
-    LOG.Basic("ASSEM-DECODE", "Convert Bytes -> Symbols Start")
+    LOG.Basic("ASSEM-DECODE", "Convert Bytes->Symbols Start")
     conv = AssembleConverter(0, 0)
     for bits in arr:
         sym = conv.bytes_to_symbow(bits)
         if sym is not None:
             result.append(sym)
     LOG.Basic("ASSEM-DECODE", "Parse Legal Symbol: %d / %d FileSize: %d BlockN: %d" % (len(result), len(arr), conv.fileSize, conv.blockN))
-    LOG.Basic("ASSEM-DECODE", "Convert Bytes -> Symbols FINISH")
+    LOG.Basic("ASSEM-DECODE", "Convert Bytes->Symbols FINISH")
     return result, conv.fileSize, conv.blockN
 
