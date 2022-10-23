@@ -4,10 +4,10 @@ from ltcode import LOG
 import dnaIO as dna
 
 if __name__ == "__main__":
-    # fileName = "data/hat-768x512.png"
-    # outFile = "data/hat-768x512-out.png"
-    fileName = "data/txt_data.txt"
-    outFile = "data/txt_data-out.txt"
+    fileName = "data/hat-768x512.png"
+    outFile = "data/hat-768x512-out.png"
+    # fileName = "data/txt_data.txt"
+    # outFile = "data/txt_data-out.txt"
 
     LOG.Basic("INIT", "File Name; %s" % fileName)
 

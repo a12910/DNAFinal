@@ -4,6 +4,8 @@ import random
 
 class DNAConverter2(DNAConverter):
 
+    useDynamicMap = True
+
     def __init__(self):
         super(DNAConverter2, self).__init__("Same2")
         self.CGCount = 0
@@ -52,14 +54,13 @@ class DNAConverter2(DNAConverter):
         return self.dnaResult
 
     def __bit8_to_DNA(self, bit8: int):
-        keys = "ACTG"
         bits = [bit8 // 64, (bit8 % 64) // 16, (bit8 % 16) // 4, bit8 % 4]
         for bit in bits:
             last1, last2 = self.last
             if last1 == last2:
-                char = self.get_Map()[last1][bit]
+                char = self.__get_Map()[last1][bit]
             else:
-                char = keys[bit]
+                char = self.__get_keyDNA(bit)
             self.__add_dna(char)
 
     def DNA_to_byteArray(self, dna: DNAStr) -> bytearray:
@@ -69,18 +70,18 @@ class DNAConverter2(DNAConverter):
         return self.byteResult
 
     def __DNA8_to_bit(self, char: str):
-        keys = {"A": 0, "C": 1, "T": 2, "G": 3}
+
         if len(self.last) == 2:
             last1, last2 = self.last
             if last1 == last2:
                 self.last.append(char)
             else:
-                self.__add_byte(keys[char])
+                self.__add_byte(self.__get_keyValue(char))
                 self.__add_count(char)
                 self.last = [last2, char]
         else:
             last1, last2, last3 = self.last
-            dic = self.get_Map()[last1]
+            dic = self.__get_Map()[last1]
             key = last3 + char
             index = dic.index(key)
             self.__add_byte(index)
@@ -105,20 +106,29 @@ class DNAConverter2(DNAConverter):
         self.byteAche = 0
         self.byteAcheIndex = 0
 
-    def get_keyDNA(self, value: int) -> str:
-        index = (self.CGCount + self.ATCount) % 4
+    def __get_dynamicIndex(self) -> int:
+        index = (self.CGCount + self.ATCount) % 19 * 7 % 4
+        if not self.useDynamicMap:
+            index = 0
+        return index
+
+    def __get_keyDNA(self, value: int) -> str:
+        index = self.__get_dynamicIndex()
+        if not self.useDynamicMap:
+            index = 0
         keys = "ACTG"
         return keys[(index + value) % 4]
 
-    def get_keyValue(self, dna1: str) -> int:
-        index = (self.CGCount + self.ATCount) % 4
+    def __get_keyValue(self, dna1: str) -> int:
+        index = self.__get_dynamicIndex()
+
         value = "ACTG".index(dna1)
         return (value - index + 4) % 4
 
-    def is_CGMap(self) -> bool:
+    def __is_CGMap(self) -> bool:
         # 是否为需要补充CG的Map
         return self.CGCount < self.ATCount
 
-    def get_Map(self) -> {}:
-        return self.CGMap if self.is_CGMap() else self.ATMap
+    def __get_Map(self) -> {}:
+        return self.CGMap if self.__is_CGMap() else self.ATMap
 
