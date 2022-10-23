@@ -12,3 +12,6 @@ class DNAStr:
 
     def slice(self, start, step):
         return DNAStr(self.data[start:start + step])
+
+    def add(self, char):
+        self.data += char

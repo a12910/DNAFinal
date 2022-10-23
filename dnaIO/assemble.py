@@ -14,7 +14,6 @@ class AssembleConverter:
         indexBit32 = self.int_to_bit32(symbol.index)
         dataBits = bytearray(bytes(symbol.data))
 
-
         if symbol.index == 0:
             sizeValue = self.fileSize % (2 ** 32)
             sizeBit32 = self.int_to_bit32(sizeValue)
@@ -117,7 +116,8 @@ def convert_symbols_from_bitArray(arr: [bytearray]) -> ([Symbol], int, int):
         sym = conv.bytes_to_symbow(bits)
         if sym is not None:
             result.append(sym)
-    LOG.Basic("ASSEM-DECODE", "Parse Legal Symbol: %d / %d FileSize: %d BlockN: %d" % (len(result), len(arr), conv.fileSize, conv.blockN))
+    LOG.Basic("ASSEM-DECODE", "Parse Legal Symbol: %d / %d" % (len(result), len(arr)))
+    LOG.Basic("ASSEM-DECODE", "Parse FileSize: %d BlockN: %d" % (conv.fileSize, conv.blockN))
     LOG.Basic("ASSEM-DECODE", "Convert Bytes->Symbols FINISH")
     return result, conv.fileSize, conv.blockN
 
