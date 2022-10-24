@@ -1,6 +1,5 @@
 
-from . import DNAStr, LOG, DNAConverter
-import random
+from . import DNAStr, DNAConverter
 
 class DNAConverter2(DNAConverter):
 
@@ -24,7 +23,7 @@ class DNAConverter2(DNAConverter):
             "G": ["CA", "CC", "CT", "CG"]
         }
 
-        self.last = ["A", "A"]
+        self.last = ["A", "T"]
         self.dnaResult = DNAStr("")
         self.byteResult = bytearray([])
 
@@ -98,16 +97,17 @@ class DNAConverter2(DNAConverter):
             self.byteAcheIndex += 1
 
     def clear(self):
+        super(DNAConverter2, self).clear()
         self.CGCount = 0
         self.ATCount = 0
-        self.last = ["A", "A"]
+        self.last = ["A", "T"]
         self.dnaResult = DNAStr("")
         self.byteResult = bytearray([])
         self.byteAche = 0
         self.byteAcheIndex = 0
 
     def __get_dynamicIndex(self) -> int:
-        index = (self.CGCount + self.ATCount) % 19 * 7 % 4
+        index = (self.CGCount + self.ATCount) // 7 % 19 % 4
         if not self.useDynamicMap:
             index = 0
         return index
@@ -127,8 +127,7 @@ class DNAConverter2(DNAConverter):
 
     def __is_CGMap(self) -> bool:
         # 是否为需要补充CG的Map
-        return self.CGCount < self.ATCount
+        return self.CGCount < self.ATCount * 0.9
 
     def __get_Map(self) -> {}:
         return self.CGMap if self.__is_CGMap() else self.ATMap
-

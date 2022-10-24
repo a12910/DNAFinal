@@ -67,8 +67,8 @@ class AssembleConverter:
 
     def get_byteHash(self, arr: bytearray):
         md5 = hashlib.md5(arr).hexdigest()
-        md5Value = int(md5[:16], 16)
-        return md5Value % (2 ** 16)
+        md5Value = int(md5[:32], 16)
+        return md5Value % (2 ** 32)
 
     def int_to_bit32(self, value: int) -> bytearray:
         result = bytearray([])
