@@ -5,21 +5,22 @@ class DNAConverter2(DNAConverter):
 
     useDynamicMap = True
 
-    def __init__(self):
-        super(DNAConverter2, self).__init__("Same2")
+    def __init__(self, name=""):
+        name1 = name if name != "" else "Same2"
+        super(DNAConverter2, self).__init__(name1)
         self.CGCount = 0
         self.ATCount = 0
 
         self.ATMap = {
             "A": ["TA", "TC", "TT", "TG"],
-            "C": ["AA", "AT", "TT", "TA"],
+            "C": ["TA", "TC", "AT", "TG"],
             "T": ["AA", "AC", "AT", "AG"],
-            "G": ["AA", "AT", "TT", "TA"]
+            "G": ["AT", "AC", "TA", "TG"]
         }
         self.CGMap = {
-            "A": ["CG", "CC", "GC", "GG"],
+            "A": ["CA", "GC", "CT", "CG"],
             "C": ["GA", "GC", "GT", "GG"],
-            "T": ["CG", "CC", "GC", "GG"],
+            "T": ["GA", "GC", "GT", "CG"],
             "G": ["CA", "CC", "CT", "CG"]
         }
 
@@ -52,15 +53,18 @@ class DNAConverter2(DNAConverter):
             self.__bit8_to_DNA(value)
         return self.dnaResult
 
+    def __bit2_to_DNA(self, bit2: int):
+        last1, last2 = self.last
+        if last1 == last2:
+            char = self.__get_Map()[last1][bit2]
+        else:
+            char = self.__get_keyDNA(bit2)
+        self.__add_dna(char)
+
     def __bit8_to_DNA(self, bit8: int):
         bits = [bit8 // 64, (bit8 % 64) // 16, (bit8 % 16) // 4, bit8 % 4]
         for bit in bits:
-            last1, last2 = self.last
-            if last1 == last2:
-                char = self.__get_Map()[last1][bit]
-            else:
-                char = self.__get_keyDNA(bit)
-            self.__add_dna(char)
+            self.__bit2_to_DNA(bit)
 
     def DNA_to_byteArray(self, dna: DNAStr) -> bytearray:
         self.clear()
@@ -82,10 +86,11 @@ class DNAConverter2(DNAConverter):
             last1, last2, last3 = self.last
             dic = self.__get_Map()[last1]
             key = last3 + char
-            index = dic.index(key)
-            self.__add_byte(index)
-            self.__add_count(key)
-            self.last = [last3, char]
+            if key in dic:
+                index = dic.index(key)
+                self.__add_byte(index)
+                self.__add_count(key)
+                self.last = [last3, char]
 
     def __add_byte(self, bit2: int):
         self.byteAche += 4 ** (3 - self.byteAcheIndex) * bit2

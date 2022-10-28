@@ -1,5 +1,6 @@
 from .distributions import *
 from .basic import LOG
+from .symbol import Symbol as Sym
 import random
 
 def get_degrees_from(distribution_name, N, k):
@@ -64,10 +65,7 @@ def encode(blocks, drops_quantity):
             # drop = drop ^ blocks[selection_indexes[n]] # according to my tests, this has the same performance
 
         # Create symbol, then log the process
-        symbol = Symbol(index=i, degree=deg, data=drop)
-        
-        if VERBOSE:
-            symbol.log(blocks_n)
+        symbol = Sym(index=i, degree=deg, data=drop, fileSize=0, blocksN=0)
 
         # log("Encoding", i, drops_quantity, start_time)
 
