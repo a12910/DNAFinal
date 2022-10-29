@@ -38,9 +38,9 @@ class DNAConverter2(DNAConverter):
             self.last = [dna[0], dna[1]]
 
         self.dnaResult.add(dna)
-        self.__add_count(dna)
+        self.add_count(dna)
 
-    def __add_count(self, dna: str):
+    def add_count(self, dna: str):
         for char in dna:
             if char in "AT":
                 self.ATCount += 1
@@ -56,7 +56,7 @@ class DNAConverter2(DNAConverter):
     def __bit2_to_DNA(self, bit2: int):
         last1, last2 = self.last
         if last1 == last2:
-            char = self.__get_Map()[last1][bit2]
+            char = self.get_Map()[last1][bit2]
         else:
             char = self.__get_keyDNA(bit2)
         self.__add_dna(char)
@@ -69,30 +69,30 @@ class DNAConverter2(DNAConverter):
     def DNA_to_byteArray(self, dna: DNAStr) -> bytearray:
         self.clear()
         for char in dna.data:
-            self.__DNA8_to_bit(char)
+            self.DNA8_to_bit(char)
         return self.byteResult
 
-    def __DNA8_to_bit(self, char: str):
+    def DNA8_to_bit(self, char: str):
 
         if len(self.last) == 2:
             last1, last2 = self.last
             if last1 == last2:
                 self.last.append(char)
             else:
-                self.__add_byte(self.__get_keyValue(char))
-                self.__add_count(char)
+                self.add_byte(self.get_keyValue(char))
+                self.add_count(char)
                 self.last = [last2, char]
         else:
             last1, last2, last3 = self.last
-            dic = self.__get_Map()[last1]
+            dic = self.get_Map()[last1]
             key = last3 + char
             if key in dic:
                 index = dic.index(key)
-                self.__add_byte(index)
-                self.__add_count(key)
+                self.add_byte(index)
+                self.add_count(key)
                 self.last = [last3, char]
 
-    def __add_byte(self, bit2: int):
+    def add_byte(self, bit2: int):
         self.byteAche += 4 ** (3 - self.byteAcheIndex) * bit2
         if self.byteAcheIndex == 3:
             self.byteResult.append(self.byteAche)
@@ -124,7 +124,7 @@ class DNAConverter2(DNAConverter):
         keys = "ACTG"
         return keys[(index + value) % 4]
 
-    def __get_keyValue(self, dna1: str) -> int:
+    def get_keyValue(self, dna1: str) -> int:
         index = self.__get_dynamicIndex()
 
         value = "ACTG".index(dna1)
@@ -134,5 +134,5 @@ class DNAConverter2(DNAConverter):
         # 是否为需要补充CG的Map
         return self.CGCount < self.ATCount * 0.9
 
-    def __get_Map(self) -> {}:
+    def get_Map(self) -> {}:
         return self.CGMap if self.__is_CGMap() else self.ATMap

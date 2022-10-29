@@ -4,6 +4,7 @@ from .dnaSymbol import DNAStr
 from .convertDNA import convert_bitArr_from_DNAs, convert_dnaArr_from_bitArr, DNAConverter
 from .convertDNA1 import DNAConverter1
 from .convertDNA2 import DNAConverter2
+from .convertDNA3 import DNAConverter3
 from .assemble import AssembleConverter
 from .assemble1 import AssembleConverter1
 from .assemble2 import AssembleConverter2
