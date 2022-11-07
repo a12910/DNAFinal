@@ -10,6 +10,7 @@ class DNAConverter2(DNAConverter):
         super(DNAConverter2, self).__init__(name1)
         self.CGCount = 0
         self.ATCount = 0
+        self.CGMax = 0.9
 
         self.ATMap = {
             "A": ["TA", "TC", "TT", "TG"],
@@ -132,7 +133,7 @@ class DNAConverter2(DNAConverter):
 
     def __is_CGMap(self) -> bool:
         # 是否为需要补充CG的Map
-        return self.CGCount < self.ATCount * 0.9
+        return self.CGCount < self.ATCount * self.CGMax
 
     def get_Map(self) -> {}:
         return self.CGMap if self.__is_CGMap() else self.ATMap

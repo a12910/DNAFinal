@@ -12,7 +12,7 @@ def load_files(fileName, blockSize, quantityRatio):
     LOG.Basic("INIT", "Filesize: {} bytes".format(fileSize))
     fileBlocks = blocks_read(file, fileSize)
     fileBlocksN = len(fileBlocks)
-    dropQuantity = fileBlocksN * quantityRatio
+    dropQuantity = int(fileBlocksN * quantityRatio)
 
     LOG.Basic("INIT", "Blocks: {} -> {} * {} bytes".format(fileBlocksN, dropQuantity, core.PACKET_SIZE))
 

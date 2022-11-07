@@ -4,13 +4,13 @@ from ltcode import LOG
 import dnaIO as dna
 
 if __name__ == "__main__":
-    fileName = "data/hat-768x512.png"
-    outFile = "data/hat-768x512-out.png"
-    # fileName = "data/txt_data.txt"
-    # outFile = "data/txt_data-out.txt"
+    # fileName = "data/hat-768x512.png"
+    # outFile = "data/hat-768x512-out.png"
+    fileName = "data/txt_data.txt"
+    outFile = "data/txt_data-out.txt"
 
     dnaConv = dna.DNAConverter3()
-    byteConv = dna.AssembleConverter1()
+    byteConv = dna.AssembleConverter2()
 
     LOG.Basic("INIT", "File Name; %s" % fileName)
 
@@ -30,7 +30,7 @@ if __name__ == "__main__":
     dnaArr = dna.convert_dnaArr_from_bitArr(bitsArr, conv=dnaConv)
 
     # 进行模拟损毁
-    dnaArrOut = dna.destory_DNAs(dnaArr, 0.0, 20, 0.0)
+    dnaArrOut = dna.destory_DNAs(dnaArr, 0.05, 20, 0.05)
 
     # 使用DNA进行恢复为比特流
     bitsArrOut = dna.convert_bitArr_from_DNAs(dnaArrOut, conv=dnaConv)

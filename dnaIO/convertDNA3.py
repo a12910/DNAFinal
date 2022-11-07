@@ -9,18 +9,20 @@ class DNAConverter3(DNAConverter2):
         name1 = name if name != "" else "Same3"
         super(DNAConverter3, self).__init__(name1)
 
-        self.ATMap = {
-            "A": ["TA", "C", "TC", "G"],
-            "C": ["A", "TC", "TG", "G"],
-            "T": ["AT", "C", "AG", "G"],
+        ATMap = {
+            "A": ["A", "T", "C", "G"],
+            "C": ["A", "C", "T", "G"],
+            "T": ["A", "T", "C", "G"],
             "G": ["A", "C", "TA", "TG"]
         }
-        self.CGMap = {
-            "A": ["CA", "GC", "T", "G"],
-            "C": ["A", "GC", "T", "AG"],
+        CGMap = {
+            "A": ["A", "T", "C", "G"],
+            "C": ["A", "T", "C", "G"],
             "T": ["A", "C", "GT", "GC"],
-            "G": ["A", "CA", "T", "CG"]
+            "G": ["A", "T", "C", "G"]
         }
+        self.ATMap = ATMap
+        self.CGMap = CGMap
 
     def DNA8_to_bit(self, char: str):
         if len(self.last) == 2:
@@ -48,8 +50,6 @@ class DNAConverter3(DNAConverter2):
                 self.add_byte(index)
                 self.add_count(key1)
                 self.last = [last3, char]
-            else:
-                raise Exception("")
 
     def DNA_to_byteArray(self, dna: DNAStr) -> bytearray:
         self.clear()
